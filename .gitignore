@@ -4,7 +4,7 @@
 
 # Exclude any subfolder except "filters", that is the main Maven module for this
 # project; any other module in any other folder should have its own repository.
-/*/
+
 !/filters
 
 # Exclude local builds files
