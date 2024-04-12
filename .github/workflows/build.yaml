@@ -1,0 +1,38 @@
+name: building_image
+
+on:
+  workflow_dispatch:
+
+jobs:
+  prepare_jar:
+    runs-on: ["k8s-runners"]
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Take okapi commit
+      id: okapi-commit
+      run: |
+        echo okapi-commit=$(grep '<okapi.commit>' pom.xml | sed  "s@.*<okapi.commit>\(.*\)</okapi.commit>.*@\1@") | tee $GITHUB_OUTPUT
+
+    - name: checkout okapi repo
+      uses: actions/checkout@v4
+      with:
+        repository: https://bitbucket.org/okapiframework/okapi.git
+        fetch-depth: 0
+        path: okapi
+
+    - name: checkout to exact commit
+      working-directory: okapi
+      run: |
+        git checkout ${{ steps.okapi-commit.outputs.okapi-commit }}
+
+
+  # build_and_push:
+  #   uses: intento/intento-github-actions/.github/workflows/ci.yml@master
+  #   with:
+  #     repo: ${{ github.repository }} #mandatory. Do not change!
+  #     branch: ${{ github.ref_name }} #mandatory. Do not change!
+  #     image_repo: ${{ github.repository }}
+  #     environment: "k8s-prod"
+  #   secrets: inherit
