@@ -5,7 +5,9 @@ on:
 
 jobs:
   prepare_jar:
-    runs-on: ["k8s-runners"]
+    runs-on: [k8s-runners]
+    env:
+      working-directory: ./
     steps:
     - name: Checkout
       uses: actions/checkout@v4
